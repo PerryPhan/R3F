@@ -1,27 +1,79 @@
-import { Environment, Scroll, ScrollControls } from '@react-three/drei';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
+
+// Component
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import './App.css';
 import { Butterfly } from './models/Butterfly';
-import { Suspense } from 'react';
+import { useEffect, useRef } from 'react';
+import { Bloom, EffectComposer, DepthOfField, Vignette } from '@react-three/postprocessing';
+import Sound from './sounds/ambient.mp3'
+import Sound2 from './sounds/ambient-rain.mp3'
+import Sound3 from './sounds/ambient-happy.mp3'
+import { Environment, Float, PositionalAudio, Scroll, ScrollControls, Sparkles } from '@react-three/drei';
 
 function App() {
   return (
     <>
-      <color attach='background' args={['#000000']} />
-      <Environment preset='warehouse' />
+      <EffectComposer>
+        <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={5} height={480} />
+        <Bloom intensity={2} luminanceThreshold={0.1} luminanceSmoothing={0.9} height={1000} />
+        <Vignette eskil={false} offset={.1} darkness={1.5} />
+      </EffectComposer>
 
+      <color attach='background' args={['#000000']} />
+      <ambientLight intensity={1} />
+      <spotLight position={[0, 25, 0]} angle={1.3} penumbra={1} castShadow intensity={2} shadow-bias={-0.0001} />
+      <Environment preset='warehouse' />
       <ScrollControls pages={6} damping={0.25}>
         <Scroll>
-          <ambientLight intensity={1}/>
-          <Suspense fallback={null} dispose={null}>
-            <Butterfly rotation-x={Math.PI * 0.05} scale={5} position={[0,-2.5,0]}/>
-            <Butterfly scale={5} position={[0,1,3]}/>
-            <Butterfly scale={5} position={[0,2,0]}/>   
-          </Suspense>
+          {/* top */}
+          <Float
+            speed={1}
+            rotationIntensity={2}
+            floatIntensity={0.2}
+            floatingRange={[1, 1]}>
+            <Butterfly rotation-x={Math.PI * 0.15} rotation-y={Math.PI * -0.55} scale={5} position={[-8, -1, -4]} />
+            <Butterfly rotation-x={Math.PI * 0.05} rotation-y={Math.PI * -0.5} scale={5} position={[0, -1, 2]} />
+            <Butterfly rotation-x={Math.PI * 0.1} scale={5} rotation-y={Math.PI * -0.35} position={[8, -1, -5]} />
+          </Float>
+
+
+          {/* middle */}
+          <Float
+            speed={1}
+            rotationIntensity={2}
+            floatIntensity={0.2}
+            floatingRange={[1, 1]}>
+            <Butterfly rotation-x={Math.PI * 0.15} rotation-y={Math.PI * -0.35} scale={5} position={[-1, -12.5, 0]} />
+            <Butterfly rotation-x={Math.PI * 0.05} rotation-y={Math.PI * -0.5} scale={5} position={[12, -14, -10]} />
+          </Float>
+
+          {/* middle */}
+          <Float
+            speed={1}
+            rotationIntensity={2}
+            floatIntensity={0.2}
+            floatingRange={[1, 1]}>
+            <Butterfly rotation-x={Math.PI * 0.15} rotation-y={Math.PI * -0.35} scale={5} position={[-3, -19.5, 2]} />
+            <Butterfly rotation-x={Math.PI * 0.05} rotation-y={Math.PI * -0.5} scale={5} position={[8, -23, -10]} />
+            <Butterfly rotation-x={Math.PI * 0.05} rotation-y={Math.PI * -0.5} scale={5} position={[4, -24, 2]} />
+          </Float>
+
+          <Sparkles noise={0} count={500} speed={0.01} size={0.6} color={"#FFD2BE"} opacity={10} scale={[20, 100, 20]}></Sparkles>
+          <Sparkles noise={0} count={50} speed={0.01} size={10} color={"#FFF"} opacity={2} scale={[30, 100, 10]} ></Sparkles>
+
+          <group position={[0, 0, 0]}>
+            <PositionalAudio autoplay loop url={Sound} distance={1.2} />
+          </group>
+          <group position={[0, -20, 0]}>
+            <PositionalAudio autoplay loop url={Sound2} distance={3} />
+          </group>
+          <group position={[0, -40, 0]}>
+            <PositionalAudio autoplay loop url={Sound3} distance={1.2} />
+          </group>
         </Scroll>
         <Scroll html style={{ width: '100%' }}>
           <Container style={{ height: '100px', position: 'relative' }} >

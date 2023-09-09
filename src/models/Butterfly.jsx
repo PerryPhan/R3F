@@ -8,32 +8,30 @@ Source: https://sketchfab.com/3d-models/borboleta-azul-butterfly-ab9192b6bc8f49e
 Title: Borboleta Azul - Butterfly
 */
 
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { v4 as uuidv4 } from 'uuid';
 import { useSkinnedMeshClone } from '../hooks/useSkinnedMeshClone';
 
 export function Butterfly(props) {
   const group = useRef()
-  const { nodes, materials, animations} = useSkinnedMeshClone('./models/butterfly/scene-transformed.glb')
+  const { nodes, materials, animations } = useSkinnedMeshClone('./models/butterfly/scene-transformed.glb')
   const { actions } = useAnimations(animations, group)
   console.log(actions);
   useEffect(() => {
+    actions['ArmatureAction.001'].timeScale = 0.15
     actions['ArmatureAction.001'].play()
   })
 
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="key={uuidv4()}">
-        <primitive object={nodes.GLTF_created_0_rootJoint} key={uuidv4()}/>
-        <skinnedMesh name="Object_7" geometry={nodes.Object_7.geometry} material={materials.M_BorboletaAzul} skeleton={nodes.Object_7.skeleton} position={[-0.06, 0, 0]} />
-        {/* <skinnedMesh
-          name="Object_7"
-          geometry={nodes.Object_7.geometry} 
+        <primitive object={nodes.GLTF_created_0_rootJoint} key={uuidv4()} />
+        <skinnedMesh name="Object_7"
+          geometry={nodes.Object_7.geometry}
           material={materials.M_BorboletaAzul}
           skeleton={nodes.Object_7.skeleton}
-          position={[-0.06, 0, 0]}
-        /> */}
+          position={[-0.06, 0, 0]} />
       </group>
     </group>
   )
