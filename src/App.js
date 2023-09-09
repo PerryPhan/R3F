@@ -7,7 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import { Butterfly } from './models/Butterfly';
-import { useEffect, useRef } from 'react';
+import { Suspense, useRef } from 'react';
 import { Bloom, EffectComposer, DepthOfField, Vignette } from '@react-three/postprocessing';
 import Sound from './sounds/ambient.mp3'
 import Sound2 from './sounds/ambient-rain.mp3'
@@ -15,6 +15,11 @@ import Sound3 from './sounds/ambient-happy.mp3'
 import { Environment, Float, PositionalAudio, Scroll, ScrollControls, Sparkles } from '@react-three/drei';
 
 function App() {
+  // Remember to press on screen to activate music. It is big to load
+  const music = useRef()
+  const music_2 = useRef()
+  const music_3 = useRef()
+
   return (
     <>
       <EffectComposer>
@@ -40,7 +45,6 @@ function App() {
             <Butterfly rotation-x={Math.PI * 0.1} scale={5} rotation-y={Math.PI * -0.35} position={[8, -1, -5]} />
           </Float>
 
-
           {/* middle */}
           <Float
             speed={1}
@@ -65,16 +69,19 @@ function App() {
           <Sparkles noise={0} count={500} speed={0.01} size={0.6} color={"#FFD2BE"} opacity={10} scale={[20, 100, 20]}></Sparkles>
           <Sparkles noise={0} count={50} speed={0.01} size={10} color={"#FFF"} opacity={2} scale={[30, 100, 10]} ></Sparkles>
 
-          <group position={[0, 0, 0]}>
-            <PositionalAudio autoplay loop url={Sound} distance={1.2} />
-          </group>
-          <group position={[0, -20, 0]}>
-            <PositionalAudio autoplay loop url={Sound2} distance={3} />
-          </group>
-          <group position={[0, -40, 0]}>
-            <PositionalAudio autoplay loop url={Sound3} distance={1.2} />
-          </group>
+          <Suspense>
+            <group position={[0, 0, 0]}>
+              <PositionalAudio ref={music} autoplay loop url={Sound} distance={1.2} />
+            </group>
+            <group position={[0, -20, 0]}>
+              <PositionalAudio ref={music_2} autoplay loop url={Sound2} distance={3} />
+            </group>
+            <group position={[0, -40, 0]}>
+              <PositionalAudio ref={music_3} autoplay loop url={Sound3} distance={1.2} />
+            </group>
+          </Suspense>
         </Scroll>
+
         <Scroll html style={{ width: '100%' }}>
           <Container style={{ height: '100px', position: 'relative' }} >
             <Row className='text-center align-items-center justify-content-center' style={{ position: 'absolute', width: '100%', height: '100vh', padding: '0px 30px 0px' }}>
