@@ -1,13 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import logo from './logo-2.png';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Canvas } from '@react-three/fiber';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <header className='App-header'>
+      <img className='App-logo' src={logo} alt='alt here'/>
+    </header>
+    <Canvas shadows frameloop={"always"}>
+      <App />
+    </Canvas>
   </React.StrictMode>
 );
 
