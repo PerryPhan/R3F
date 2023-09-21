@@ -1,6 +1,6 @@
 {
-  "name": "r3f-elegant-landing-page",
-  "version": "0.1.0",
+  "name": "r3f-training",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@react-three/drei": "^9.83.3",
@@ -10,6 +10,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.3.1",
+    "maath": "^0.7.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.8.0",
     "react-dom": "^18.2.0",

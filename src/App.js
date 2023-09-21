@@ -1,141 +1,133 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
-
 // Component
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
-import { Butterfly } from './models/Butterfly';
-import { Suspense, useRef } from 'react';
-import { Bloom, EffectComposer, DepthOfField, Vignette } from '@react-three/postprocessing';
-import Sound from './sounds/ambient.mp3'
-import Sound2 from './sounds/ambient-rain.mp3'
-import Sound3 from './sounds/ambient-happy.mp3'
-import { Environment, Float, PositionalAudio, Scroll, ScrollControls, Sparkles } from '@react-three/drei';
+import { CameraControls, Environment, MeshPortalMaterial, OrbitControls, RoundedBox, Text, useCursor, useTexture } from '@react-three/drei';
+import * as THREE from 'three';
+import { Cat } from './components/Cat';
+import { GhostSkull } from './components/Ghost_Skull';
+import { Cactoro } from './components/Cactoro';
+import { useEffect, useRef, useState } from 'react';
+import { easing } from 'maath';
+import { useFrame, useThree } from '@react-three/fiber';
 
 function App() {
-  // Remember to press on screen to activate music. It is big to load
-  const music = useRef()
-  const music_2 = useRef()
-  const music_3 = useRef()
+  const [active, setActive] = useState(null);
+  const [hovered, setHovered] = useState(null)
+  const controlsRef = useRef();
+  useCursor(hovered);
+  const scene = useThree((state) => state.scene);
+
+  useEffect(() => {
+    if (active) {
+      const targetPosition = new THREE.Vector3();
+      scene.getObjectByName(active).getWorldPosition(targetPosition);
+      console.log(targetPosition);
+      controlsRef.current.setLookAt(
+        0,
+        0,
+        5,
+        targetPosition.x,
+        targetPosition.y,
+        targetPosition.z,
+        true
+      )
+    } else {
+      controlsRef.current.setLookAt(0, 0, 10, 0, 0, 0, true)
+    }
+  }, [active]);
 
   return (
     <>
-      <EffectComposer>
-        <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={5} height={480} />
-        <Bloom intensity={2} luminanceThreshold={0.1} luminanceSmoothing={0.9} height={1000} />
-        <Vignette eskil={false} offset={.1} darkness={1.5} />
-      </EffectComposer>
-
-      <color attach='background' args={['#000000']} />
-      <ambientLight intensity={1} />
-      <spotLight position={[0, 25, 0]} angle={1.3} penumbra={1} castShadow intensity={2} shadow-bias={-0.0001} />
-      <Environment preset='warehouse' />
-      <ScrollControls pages={6} damping={0.25}>
-        <Scroll>
-          {/* top */}
-          <Float
-            speed={1}
-            rotationIntensity={2}
-            floatIntensity={0.2}
-            floatingRange={[1, 1]}>
-            <Butterfly rotation-x={Math.PI * 0.15} rotation-y={Math.PI * -0.55} scale={5} position={[-8, -1, -4]} />
-            <Butterfly rotation-x={Math.PI * 0.05} rotation-y={Math.PI * -0.5} scale={5} position={[0, -1, 2]} />
-            <Butterfly rotation-x={Math.PI * 0.1} scale={5} rotation-y={Math.PI * -0.35} position={[8, -1, -5]} />
-          </Float>
-
-          {/* middle */}
-          <Float
-            speed={1}
-            rotationIntensity={2}
-            floatIntensity={0.2}
-            floatingRange={[1, 1]}>
-            <Butterfly rotation-x={Math.PI * 0.15} rotation-y={Math.PI * -0.35} scale={5} position={[-1, -12.5, 0]} />
-            <Butterfly rotation-x={Math.PI * 0.05} rotation-y={Math.PI * -0.5} scale={5} position={[12, -14, -10]} />
-          </Float>
-
-          {/* middle */}
-          <Float
-            speed={1}
-            rotationIntensity={2}
-            floatIntensity={0.2}
-            floatingRange={[1, 1]}>
-            <Butterfly rotation-x={Math.PI * 0.15} rotation-y={Math.PI * -0.35} scale={5} position={[-3, -19.5, 2]} />
-            <Butterfly rotation-x={Math.PI * 0.05} rotation-y={Math.PI * -0.5} scale={5} position={[8, -23, -10]} />
-            <Butterfly rotation-x={Math.PI * 0.05} rotation-y={Math.PI * -0.5} scale={5} position={[4, -24, 2]} />
-          </Float>
-
-          <Sparkles noise={0} count={500} speed={0.01} size={0.6} color={"#FFD2BE"} opacity={10} scale={[20, 100, 20]}></Sparkles>
-          <Sparkles noise={0} count={50} speed={0.01} size={10} color={"#FFF"} opacity={2} scale={[30, 100, 10]} ></Sparkles>
-
-          <Suspense>
-            <group position={[0, 0, 0]}>
-              <PositionalAudio ref={music} autoplay loop url={Sound} distance={1.2} />
-            </group>
-            <group position={[0, -20, 0]}>
-              <PositionalAudio ref={music_2} autoplay loop url={Sound2} distance={3} />
-            </group>
-            <group position={[0, -40, 0]}>
-              <PositionalAudio ref={music_3} autoplay loop url={Sound3} distance={1.2} />
-            </group>
-          </Suspense>
-        </Scroll>
-
-        <Scroll html style={{ width: '100%' }}>
-          <Container style={{ height: '100px', position: 'relative' }} >
-            <Row className='text-center align-items-center justify-content-center' style={{ position: 'absolute', width: '100%', height: '100vh', padding: '0px 30px 0px' }}>
-              <Col xs={6}>
-                <div>
-                  <h1 style={{ marginBottom: '0px' }}>Life can be a struggle</h1>
-                </div>
-              </Col>
-            </Row>
-            <Row className='text-center align-items-center justify-content-center' style={{ position: 'absolute', width: '100%', height: '100vh', padding: '0px 30px 0px', top: '100vh' }}>
-              <Col xs={6}>
-                <div>
-                  <h1 style={{ marginBottom: '0px' }}>Sometimes you can feel</h1>
-                </div>
-              </Col>
-            </Row>
-            <Row className='text-center align-items-center justify-content-center' style={{ position: 'absolute', width: '100%', height: '100vh', padding: '0px 30px 0px', top: '200vh' }}>
-              <Col xs={6}>
-                <div>
-                  <h1 style={{ marginBottom: '0px' }}>Lost</h1>
-                  <h1 style={{ marginBottom: '0px' }}>Overwhelmed</h1>
-                  <h1 style={{ marginBottom: '0px' }}>Empty inside</h1>
-                </div>
-              </Col>
-            </Row>
-            <Row className='text-center align-items-center justify-content-center' style={{ position: 'absolute', width: '100%', height: '100vh', padding: '0px 30px 0px', top: '300vh' }}>
-              <Col xs={6}>
-                <div>
-                  <h1 style={{ marginBottom: '0px' }}>Drifting through life <br />With no help or guidance</h1>
-                </div>
-              </Col>
-            </Row>
-
-            <Row className='text-center align-items-center justify-content-center' style={{ position: 'absolute', width: '100%', height: '100vh', padding: '0px 30px 0px', top: '400vh' }}>
-              <Col xs={8}>
-                <div>
-                  <h1 style={{ marginBottom: '0px' }}>But there is hope...<br /> and people who can help</h1>
-                </div>
-              </Col>
-            </Row>
-
-            <Row className='text-center align-items-center justify-content-center' style={{ position: 'absolute', width: '100%', height: '100vh', padding: '0px 30px 0px', top: '500vh' }}>
-              <Col xs={6}>
-                <div>
-                  <h1 style={{ marginBottom: '0px' }}>It's time to get<br /> the support you need</h1>
-                  <h2 style={{ marginBottom: '30px', marginTop: '-20px' }}>To get your life back</h2>
-                  <Button variant="outline-light" size="lg">Get help now</Button>{' '}
-                </div>
-              </Col>
-            </Row>
-          </Container>
-        </Scroll>
-      </ScrollControls>
+      <ambientLight intensity={0.5} />
+      <Environment preset="sunset" />
+      <CameraControls
+        ref={controlsRef}
+        maxPolarAngle={Math.PI / 2}
+        minPolarAngle={Math.PI / 6}
+      />
+      <MonsterStage
+        texture={"textures/anime_art_style_a_water_based_pokemon_like_environ.jpg"}
+        name="Cat"
+        color="#a36b4a"
+        active={active}
+        setActive={setActive}
+        hovered={hovered}
+        setHovered={setHovered}>
+        <Cat
+          scale={0.6}
+          position-y={-0.5}
+          hovered={hovered === "Cat"}
+        />
+      </MonsterStage>
+      <MonsterStage
+        texture={"textures/anime_art_style_cactus_forest.jpg"}
+        position-x={-2.5}
+        rotation-y={Math.PI / 8}
+        name="Cactus"
+        color="#377e43"
+        active={active}
+        setActive={setActive}
+        hovered={hovered}
+        setHovered={setHovered}>
+        <Cactoro
+          scale={0.5}
+          position-y={-0.8}
+          hovered={hovered === "Cactus"}
+        />
+      </MonsterStage>
+      <MonsterStage
+        texture={"textures/anime_art_style_lava_world.jpg"}
+        position-x={2.5}
+        rotation-y={-Math.PI / 8}
+        name="Ghost"
+        color="#1f1f1f"
+        active={active}
+        setActive={setActive}
+        hovered={hovered}
+        setHovered={setHovered}>
+        <GhostSkull
+          scale={0.6}
+          position-y={-1}
+          hovered={hovered === "Ghost"}
+        />
+      </MonsterStage>
     </>
+  );
+}
+
+function MonsterStage({ children, texture, name, color, active, setActive, hovered, setHovered, ...props }) {
+  const map = useTexture(texture)
+  const portalMaterial = useRef();
+
+  useFrame((_state, delta) => {
+    const worldOpen = active === name;
+    easing.damp(portalMaterial.current, "blend", worldOpen ? 1 : 0, 0.2, delta)
+  })
+
+  return (
+    <group {...props}>
+      <Text font="fonts/Caprasimo-Regular.ttf" fontSize={0.3} position={[0, -1.3, 0.051]} anchorY={"bottom"}>
+        {name}
+        <meshBasicMaterial color={color} toneMapped={false} />
+      </Text>
+      <RoundedBox
+        args={[2, 3, 0.1]} name={name}
+        onDoubleClick={() => setActive(active === name ? null : name)}
+        onPointerEnter={() => setHovered(name)}
+        onPointerLeave={() => setHovered(null)}
+      >
+        <MeshPortalMaterial
+          side={THREE.DoubleSide}
+          ref={portalMaterial}
+        >
+          <ambientLight intensity={1} />
+          <Environment preset="sunset" />
+          {children}
+          <mesh>
+            <sphereGeometry args={[5, 64, 64]} />
+            <meshBasicMaterial map={map} side={THREE.BackSide} />
+          </mesh>
+        </MeshPortalMaterial>
+      </RoundedBox>
+    </group>
   );
 }
 
