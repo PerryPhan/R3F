@@ -19,7 +19,6 @@ function App() {
     if (active) {
       const targetPosition = new THREE.Vector3();
       scene.getObjectByName(active).getWorldPosition(targetPosition);
-      console.log(targetPosition);
       controlsRef.current.setLookAt(
         0,
         0,
