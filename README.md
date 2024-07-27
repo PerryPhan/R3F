@@ -1,6 +1,10 @@
 # Create R3F (React Three Fiber with Drei)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Documents
+- Learning the basic thing [How to R3F](https://docs.google.com/document/d/1xFLcuOohxTZE2qkEeWkv_uFzpWoy6vVU/edit?usp=drive_link&ouid=107141255373414348992&rtpof=true&sd=true)
+- How to do tutorial Elegant landing page [R3F Tutorial Elegant Landing page - Reece Sugars.docx](https://docs.google.com/document/d/1VXRlLkF_oHCn4SCHUdLYGyHM2p-_bs7W/edit?usp=drive_link&ouid=107141255373414348992&rtpof=true&sd=true)
+- How to do tutorial Mesh portal material [R3F Tutorial Mesh Portal Material - Wawa Sensei](https://docs.google.com/document/d/1FQaV0EqEGlnWCIBna9ekNDzlf0AGStqb/edit?usp=drive_link&ouid=107141255373414348992&rtpof=true&sd=true)
 
 # Dependencies
 * Node 18
