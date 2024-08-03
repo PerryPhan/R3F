@@ -8,10 +8,22 @@ Title: Gundam Phenex
 */
 
 import React from 'react'
-import { useGLTF } from '@react-three/drei'
+import { useGLTF, useScroll } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
 
 export function GundamPhenex(props) {
   const { nodes, materials } = useGLTF('/models/gundam_phenex/scene.gltf')
+  const scroll = useScroll();
+  console.log(props)
+  useFrame((state, delta) => {
+  //   // The offset is between 0 and 1, you can apply it to your models any way you like
+    const os = scroll.offset
+    state.camera.position.set(0, 50, 1000)
+
+    if (os => 0 && os <= 0.5) {
+      state.camera.rotation.y = (os) * 1.8
+    }
+  })
   return (
     <group {...props} dispose={null}>
       <group rotation={[-Math.PI / 2, 0, 0]}>
